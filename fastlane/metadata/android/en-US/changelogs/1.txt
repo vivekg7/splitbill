@@ -1,0 +1,1 @@
+First release: groups, expenses with equal, exact, share and percentage splits, payments, balances, minimum-payment settle-up, UPI payment links, text and image summaries, and group file export and import.

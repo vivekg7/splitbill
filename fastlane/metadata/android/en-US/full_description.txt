@@ -1,0 +1,20 @@
+SplitBill keeps track of shared costs for a trip, a flat or the office lunch, and tells everyone who owes whom. It runs entirely on your phone: no account, no cloud, no ads, no tracking, and no internet permission.
+
+<b>Features</b>
+<ul>
+<li>Groups with members (names only, optional UPI ID) and a currency symbol (₹ by default)</li>
+<li>Expenses with description, amount, date and category, paid by one person or several</li>
+<li>Split equally among any subset, by exact amounts, by shares or by percentage, with a live check that the split adds up</li>
+<li>Record payments between members ("Ravi paid Asha ₹500")</li>
+<li>Balances per member and a settle-up plan with the fewest possible payments</li>
+<li>Pay with UPI: opens your UPI app with the receiver, amount and note filled in</li>
+<li>Share a summary as WhatsApp-friendly text or as an image</li>
+<li>Send or export a group as a file and import it on another phone; re-importing an updated file updates the group instead of duplicating it</li>
+<li>Material You colours and dark theme</li>
+</ul>
+
+<b>Exact money maths</b>
+Amounts are whole paise, never floating point. When an amount does not divide evenly, the spare paise are handed out by a fixed rule, so every phone computes the same shares and balances always add up to zero.
+
+<b>Free and open source</b>
+MIT licensed. No ads, no analytics, no accounts.
