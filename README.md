@@ -31,7 +31,10 @@ None. The manifest declares no permissions, including **no `INTERNET`**, so the 
 cannot send your data anywhere even by accident. Files move through Android's document
 picker and share sheet, which need no permission. The manifest's `<queries>` entry for
 `upi://` links is not a permission; it only lets Android 11+ show which installed apps
-can take a UPI payment. See [PRIVACY.md](PRIVACY.md).
+can take a UPI payment. The built APK does list one entry,
+`com.crylo.splitbill.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION`: AndroidX adds it to
+keep the app's own broadcast receivers private, only this app holds it, and it grants
+nothing. See [PRIVACY.md](PRIVACY.md).
 
 ## Building
 
@@ -47,6 +50,37 @@ export JAVA_HOME="/Applications/Android Studio.app/Contents/jbr/Contents/Home"
 Release signing reads an optional, git-ignored `keystore.properties` at the repo root
 (`storeFile`, `storePassword`, `keyAlias`, `keyPassword`). Without it the release APK
 is built unsigned.
+
+## Releasing on Google Play
+
+```sh
+./gradlew lintRelease testDebugUnitTest
+./scripts/archive-apk.sh            # build, verify, archive
+./scripts/archive-apk.sh --force    # replace an existing archive
+```
+
+`scripts/archive-apk.sh` builds the release APK and AAB and copies them into
+`local/releases/v<version>/` as `splitbill-v<version>.apk` and `.aab`, each with a
+`.sha256`, plus the R8 `mapping.txt` that turns a minified stack trace from that
+build back into names. Upload the `.aab` to Play; the `.apk` is for sideloading.
+The version is read from the built APK, so the name cannot disagree with what
+shipped. The script refuses an unsigned APK and a bundle signed with a different
+key, archives a dirty tree as `v<version>-dirty-g<commit>/`, and never replaces
+an existing archive without `--force`.
+
+- **Signing.** The app uses Play App Signing: Google holds the key that signs what
+  users install, and `keystore.properties` points at the _upload_ key. A lost
+  upload key can be reset from the Play Console; a lost app signing key could not
+  be, which is why Google keeps it.
+- **Store listing.** Text, icon, feature graphic and screenshots are in
+  [`fastlane/metadata/android/en-US/`](fastlane/metadata/android/en-US), the
+  layout F-Droid also reads. Bump `versionCode` and `versionName` in
+  `app/build.gradle.kts` and add `changelogs/<versionCode>.txt` for every release.
+- **Screenshots** must be no taller than 2:1, so take them with the emulator's
+  display set to `adb shell wm size 1080x2160` (and `adb shell wm size reset`
+  afterwards), at font scale 1.0. The demo groups were written straight into a
+  debug build's `splitbill.db` with `run-as`, rather than tapped in. The share
+  sheet is left out because it shows other companies' app icons.
 
 ## How it works, and why
 
